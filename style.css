@@ -1,0 +1,30 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+h2{
+    margin: 10px;
+}
+
+#contenedorDatos {
+    height: 100px;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    background-color: red;
+}
+
+p {
+    display: none;
+    color: white;
+}
+
