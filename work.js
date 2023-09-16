@@ -1,4 +1,6 @@
-const listaDeAlumnos = [];
+// constante y constructor alumnos
+
+const listaDeAlumnos = JSON.parse(localStorage.getItem("listaDeAlumnos")) || [];
 
 class Alumno {
     constructor(nombreAlumno, apellidoAlumno, notaAlumno) {
@@ -9,36 +11,77 @@ class Alumno {
     }
 }
 
+
+
+// Función para no recargar la página
+
 function validarFormulario(e) {
     e.preventDefault();
-    console.log("Formulario Enviado");
 
     document.getElementById("mensajeError").style.display = "none";
 
     e.target.reset();
 }
 
+// Función para chequear si el alumno ya existe
+
+function alumnoExistente(nombre, apellido) {
+    return listaDeAlumnos.some(alumno => alumno.nombre === nombre && alumno.apellido === apellido);
+}
+
+
+// Función agregar alumno
+
+
 function funcionAgregarAlumno() {
+
+    // Mensajes de error y éxito
+    document.getElementById("mensajeError").style.display = "none";
+    document.getElementById("mensajeOptimo").style.display = "none";
+
+
+    // Variables para el constructor obtenidas de los inputs
     let nombre = document.getElementById("nombreInput").value;
     let apellido = document.getElementById("apellido").value;
     let nota = parseInt(document.getElementById("nota").value);
 
-    if (!nombre || !apellido || isNaN(nota)) {
+
+    // Manejo de errores de los datos ingresados
+    if (!nombre || !isNaN(nombre) || !apellido || !isNaN(apellido) || isNaN(nota) || nota <1 || nota > 10) {
         document.getElementById("mensajeError").style.display = "block";
         return;
+    }else{
+        if (alumnoExistente(nombre, apellido)) {
+            document.getElementById("mensajeError").textContent = "El alumno ya existe.";
+            document.getElementById("mensajeError").style.display = "block";
+            return;
+        }else{
+            document.getElementById("mensajeOptimo").style.display = "block";
+        }
+
+        
     }
 
+
+    
+    // Finalización clase constructora
     let nuevoAlumno = new Alumno(nombre, apellido, nota);
 
-    listaDeAlumnos.push(nuevoAlumno);
 
+    // Pusheo al array con el proceso JSON
+    listaDeAlumnos.push(nuevoAlumno);
+    localStorage.setItem("listaDeAlumnos", JSON.stringify(listaDeAlumnos));
+    
+
+    //Reseteo de inputs
     document.getElementById("nombreInput").value = "";
     document.getElementById("apellido").value = "";
     document.getElementById("nota").value = "";
 
-    console.log(listaDeAlumnos);
 }
 
+
+// Creación contenedor de inputs
 let contenedorDatos = document.createElement("div");
 contenedorDatos.id = "contenedorDatos"
 
@@ -49,17 +92,221 @@ contenedorDatos.innerHTML = `
 <input type="text" id="nombreInput" placeholder="Ingresar nombre..." />
 <input type="text" id="apellido" placeholder="Ingresar apellido..." />
 <input type="number" id="nota" placeholder="ingresar nota..." />
-<input type="button" id="enviarDatos" value="Enviar Datos" />
+<input type="button" id="enviarDatos" class="btn-filtro" min="1" max="10" value="Enviar Datos" />
 </form>
-<p id="mensajeError">Por favor, complete todos los campos.</p>`;
+<p id="mensajeError">Por favor, complete todos los campos.<br>Notas de 1 a 10 únicamente.</p>
+<p id="mensajeOptimo"> Alumno agregado, gracias.</p>`;
 
 document.body.append(contenedorDatos);
 
+
+// Eventos 
 let botonEnviarDatos = document.getElementById("enviarDatos");
 botonEnviarDatos.addEventListener("click", funcionAgregarAlumno);
 
 let formulario = document.getElementById("form-test");
-formulario.addEventListener("reset", validarFormulario)
+formulario.addEventListener("reset", validarFormulario);
+
+
+
+
+// Creación contenedor de botones 
+
+let contenedorBotones = document.createElement("div");
+contenedorBotones.id = "contenedorBotones";
+
+contenedorBotones.innerHTML = `
+<h3>Lista de alumnos</h3>
+
+<button type="button" class="btn btn-mostrar">Mostrar</button>
+<button type="button" class="btn btn-ocultar">Ocultar</button>
+<p class="d-inline-flex gap-1">
+  <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+    Aplicar filtro por:
+  </a>
+</p>  
+  <div class="collapse" id="collapseExample">
+  <div class="card card-body">
+    <button type="button" class="btn btn-interno btn-collapse btn-mayorMenor">Nota mayor a menor</button>
+    <button type="button" class="btn btn-interno btn-collapse btn-menorMayor">Nota menor a mayor</button>
+    <button type="button" class="btn btn-interno btn-collapse btn-aprobados">Aprobados</button>
+    <button type="button" class="btn btn-interno btn-collapse btn-desaprobados">Desaprobados</button>
+    <button type="button" class="btn btn-interno btn-collapse btn-alfabeto">Alfabeticamente</button>
+  </div>
+</div>
+`
+
+document.body.append(contenedorBotones);
+
+
+
+
+// Creación contenedor lista
+
+let contenedorLista = document.createElement("div")
+contenedorLista.id= "contenedorLista";
+
+contenedorLista.innerHTML = `
+<ul id="listaAlumnos"></ul>
+<p id="p-lista"> Aún no hay alumnos, por favor ingresar. </p>`
+
+document.body.append(contenedorLista)
+
+const botonMostrar = document.querySelector(".btn-mostrar");
+botonMostrar.addEventListener("click", mostrarListaDeAlumnos);
+
+
+
+
+// Constante y función para mostrar el array listaDeAlumnos en una lista
+
+
+
+function mostrarListaDeAlumnos() {
+
+    const listaAlumnosUl = document.getElementById("listaAlumnos");
+    listaAlumnosUl.style.display = "block";
+
+    document.getElementById("p-lista").style.display = "none";
+
+    listaAlumnosUl.innerHTML = "";
+
+    if (listaDeAlumnos.length === 0 ) {
+        document.getElementById("p-lista").style.display = "block";
+        return; 
+    }else// Recorre el array listaDeAlumnos y crea elementos <li> para cada alumno
+    (setTimeout(() =>  {
+    listaDeAlumnos.forEach((alumno, idx) => {
+        const li = document.createElement("li");
+        li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()}`;
+        listaAlumnosUl.appendChild(li);
+    })}, 1000))
+}
+
+
+// Función para mostrar la lista pero de mayor a menor nota
+
+function mostrarListaDeAlumnosOrdenada() {
+
+    const listaAlumnosUl = document.getElementById("listaAlumnos");
+    listaAlumnosUl.style.display = "block";
+
+    listaAlumnosUl.innerHTML = "";
+
+    // Recorre el array listaDeAlumnos y crea elementos <li> para cada alumno
+    setTimeout(() => {
+        listaDeAlumnos.forEach((alumno, idx) => {
+            const li = document.createElement("li");
+            li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - Nota final: ${alumno.nota}`;
+            listaAlumnosUl.appendChild(li);
+        })},1000)
+}
+
+
+// Función para filtrar alumnos 
+
+const mostrarAlumnosFiltrados = (alumnosFiltrados) => {
+    const listaAlumnosUl = document.getElementById("listaAlumnos");
+    listaAlumnosUl.style.display = "block";
+
+    listaAlumnosUl.innerHTML = "";
+
+    // Recorre el array de alumnos filtrados y crea elementos <li> para cada alumno
+    setTimeout(()=> {
+        alumnosFiltrados.forEach((alumno, idx) => {
+            const li = document.createElement("li");
+            li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - Nota final: ${alumno.nota}`;
+            listaAlumnosUl.appendChild(li);
+        });}, 1000);
+    
+}
+
+
+
+
+// Función para ocultar la lista
+
+const ocultarLista = () => {
+    const listaAlumnosUl = document.getElementById("listaAlumnos");
+    listaAlumnosUl.style.display = "none";
+}
+
+const botonOcultar = document.querySelector(".btn-ocultar");
+botonOcultar.addEventListener("click", ocultarLista);
+
+
+// Función para ordenar de mayor a menor nota 
+
+const mayorParaMenor = () => {
+    listaDeAlumnos.sort((a, b) => b.nota - a.nota);
+
+    mostrarListaDeAlumnosOrdenada();
+}
+
+// Funcion para ordenar de menor a mayor nota
+
+const menorParaMayor = () => {
+    listaDeAlumnos.sort((a, b) => a.nota - b.nota);
+
+    mostrarListaDeAlumnosOrdenada();
+}
+
+// Función para mostrar aprobados
+
+const aprobados = () => {
+    const aprobados = listaDeAlumnos.filter(alumno => alumno.aprobado);
+
+
+    mostrarAlumnosFiltrados(aprobados);
+}
+
+
+// Función para mostrar desaprobados
+
+const desaprobados = () => {
+    const desaprobados = listaDeAlumnos.filter(alumno => !alumno.aprobado);
+
+
+    mostrarAlumnosFiltrados(desaprobados);
+}
+
+
+// Función para ordenar alfabeticamente
+
+const ordenarAlfabeto = () => {
+    listaDeAlumnos.sort((a, b) => {
+        const nombreA = a.nombre.toLowerCase();
+        const nombreB = b.nombre.toLowerCase();
+
+        return nombreA < nombreB ? -1 : nombreA > nombreB ? 1 : 0;
+
+        
+    })
+
+    mayorParaMenor();
+}
+
+
+const botonMayorParaMenor = document.querySelector(".btn-mayorMenor");
+botonMayorParaMenor.addEventListener("click", mayorParaMenor);
+
+
+const botonMenorParaMayor = document.querySelector(".btn-menorMayor");
+botonMenorParaMayor.addEventListener("click", menorParaMayor);
+
+const botonAprobados = document.querySelector(".btn-aprobados");
+botonAprobados.addEventListener("click", aprobados);
+
+const botonDesaprobados = document.querySelector(".btn-desaprobados");
+botonDesaprobados.addEventListener("click", desaprobados);
+
+const botonAlfabeto = document.querySelector(".btn-alfabeto");
+botonAlfabeto.addEventListener("click", ordenarAlfabeto);
+
+
+
+
+
 
 
 
