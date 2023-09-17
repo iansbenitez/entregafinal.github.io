@@ -148,6 +148,7 @@ contenedorLista.id= "contenedorLista";
 
 contenedorLista.innerHTML = `
 <ul id="listaAlumnos"></ul>
+<p id="mensajeCargando" style="display: none;">Cargando...</p>
 <p id="p-lista"> Aún no hay alumnos, por favor ingresar. </p>`
 
 document.body.append(contenedorLista)
@@ -165,6 +166,9 @@ botonMostrar.addEventListener("click", mostrarListaDeAlumnos);
 function mostrarListaDeAlumnos() {
 
     const listaAlumnosUl = document.getElementById("listaAlumnos");
+    const mensajeCargando = document.getElementById("mensajeCargando");
+
+    mensajeCargando.style.display = "block";
     listaAlumnosUl.style.display = "block";
 
     document.getElementById("p-lista").style.display = "none";
@@ -176,11 +180,17 @@ function mostrarListaDeAlumnos() {
         return; 
     }else// Recorre el array listaDeAlumnos y crea elementos <li> para cada alumno
     (setTimeout(() =>  {
-    listaDeAlumnos.forEach((alumno, idx) => {
-        const li = document.createElement("li");
-        li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()}`;
-        listaAlumnosUl.appendChild(li);
-    })}, 1000))
+        mensajeCargando.style.display = "none";
+
+        listaDeAlumnos.forEach((alumno, idx) => {
+            const li = document.createElement("li");
+            const botonEliminar = document.createElement("button");
+            botonEliminar.innerText = "Eliminar";
+            botonEliminar.addEventListener("click", () =>  eliminarAlumno(idx));
+            li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - `;
+            li.appendChild(botonEliminar);
+            listaAlumnosUl.appendChild(li);
+    })}, 600))
 }
 
 
@@ -189,6 +199,10 @@ function mostrarListaDeAlumnos() {
 function mostrarListaDeAlumnosOrdenada() {
 
     const listaAlumnosUl = document.getElementById("listaAlumnos");
+    const mensajeCargando = document.getElementById("mensajeCargando");
+
+    mensajeCargando.style.display = "block";
+    
     listaAlumnosUl.style.display = "block";
 
     listaAlumnosUl.innerHTML = "";
@@ -196,10 +210,14 @@ function mostrarListaDeAlumnosOrdenada() {
     // Recorre el array listaDeAlumnos y crea elementos <li> para cada alumno
     setTimeout(() => {
         listaDeAlumnos.forEach((alumno, idx) => {
+            mensajeCargando.style.display = "none";
+
             const li = document.createElement("li");
+            
+
             li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - Nota final: ${alumno.nota}`;
             listaAlumnosUl.appendChild(li);
-        })},1000)
+        })},600)
 }
 
 
@@ -207,6 +225,9 @@ function mostrarListaDeAlumnosOrdenada() {
 
 const mostrarAlumnosFiltrados = (alumnosFiltrados) => {
     const listaAlumnosUl = document.getElementById("listaAlumnos");
+    const mensajeCargando = document.getElementById("mensajeCargando");
+
+    mensajeCargando.style.display = "block";
     listaAlumnosUl.style.display = "block";
 
     listaAlumnosUl.innerHTML = "";
@@ -214,10 +235,12 @@ const mostrarAlumnosFiltrados = (alumnosFiltrados) => {
     // Recorre el array de alumnos filtrados y crea elementos <li> para cada alumno
     setTimeout(()=> {
         alumnosFiltrados.forEach((alumno, idx) => {
+            mensajeCargando.style.display = "none";
+
             const li = document.createElement("li");
             li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - Nota final: ${alumno.nota}`;
             listaAlumnosUl.appendChild(li);
-        });}, 1000);
+        });}, 600);
     
 }
 
@@ -229,6 +252,8 @@ const mostrarAlumnosFiltrados = (alumnosFiltrados) => {
 const ocultarLista = () => {
     const listaAlumnosUl = document.getElementById("listaAlumnos");
     listaAlumnosUl.style.display = "none";
+
+    document.getElementById("mensajeCargando").style.display = "none";
 }
 
 const botonOcultar = document.querySelector(".btn-ocultar");
@@ -284,6 +309,13 @@ const ordenarAlfabeto = () => {
     })
 
     mayorParaMenor();
+}
+
+
+const eliminarAlumno = (idx) => {
+    listaDeAlumnos.splice(idx, 1);
+
+    mostrarListaDeAlumnos();
 }
 
 
