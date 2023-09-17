@@ -8,6 +8,12 @@ body {
     background-color: black !important;
 }
 
+.marquee {
+    position: relative;
+    left: 30%;
+    width: 40%;
+}
+
 h1, h2, h3 {
     text-align: center;
 
@@ -88,7 +94,7 @@ p {
     display: flex;
     width: 40% !important;
 
-    box-shadow: 3px 3px 3px rgba(255, 255, 255, 0.526);
+    box-shadow: 7px 7px 7px rgba(255, 255, 255, 0.526);
 
     border: 1px solid gold;
     
