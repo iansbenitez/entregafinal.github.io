@@ -102,7 +102,7 @@ p {
     margin-left: auto;
 
     align-items: center;
-    justify-content: center;
+    justify-content: start;
 
     background-color: rgba(255, 0, 0, 0.285);
     border-radius: 10px;
@@ -115,6 +115,21 @@ p {
 #contenedorLista li {
     color: white !important;
 }
+
+
+
+#listaAlumnos li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#listaAlumnos li button {
+    margin-right: 10px !important; 
+
+    border-radius: 10px;
+}
+
 
 
 

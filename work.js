@@ -71,6 +71,10 @@ function funcionAgregarAlumno() {
     // Pusheo al array con el proceso JSON
     listaDeAlumnos.push(nuevoAlumno);
     localStorage.setItem("listaDeAlumnos", JSON.stringify(listaDeAlumnos));
+
+    // Automáticamente se abre la lista
+
+    mostrarListaDeAlumnos();
     
 
     //Reseteo de inputs
@@ -145,11 +149,15 @@ document.body.append(contenedorBotones);
 
 let contenedorLista = document.createElement("div")
 contenedorLista.id= "contenedorLista";
+contenedorLista.style.display = "none";
 
 contenedorLista.innerHTML = `
 <ul id="listaAlumnos"></ul>
 <p id="mensajeCargando" style="display: none;">Cargando...</p>
-<p id="p-lista"> Aún no hay alumnos, por favor ingresar. </p>`
+<p id="p-lista"> Aún no hay alumnos, por favor ingresar. </p>
+<p id="emptyAprobados" style="display: none;">No hay alumnos aprobados.</p>
+<p id="emptyDesaprobados" style="display: none;">No hay alumnos desaprobados.</p>
+`
 
 document.body.append(contenedorLista)
 
@@ -167,6 +175,9 @@ function mostrarListaDeAlumnos() {
 
     const listaAlumnosUl = document.getElementById("listaAlumnos");
     const mensajeCargando = document.getElementById("mensajeCargando");
+    const divOculto = document.getElementById("contenedorLista");
+
+    divOculto.style.display = "block";
 
     mensajeCargando.style.display = "block";
     listaAlumnosUl.style.display = "block";
@@ -177,6 +188,8 @@ function mostrarListaDeAlumnos() {
 
     if (listaDeAlumnos.length === 0 ) {
         document.getElementById("p-lista").style.display = "block";
+
+        mensajeCargando.style.display = "none";
         return; 
     }else// Recorre el array listaDeAlumnos y crea elementos <li> para cada alumno
     (setTimeout(() =>  {
@@ -187,7 +200,7 @@ function mostrarListaDeAlumnos() {
             const botonEliminar = document.createElement("button");
             botonEliminar.innerText = "Eliminar";
             botonEliminar.addEventListener("click", () =>  eliminarAlumno(idx));
-            li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - `;
+            li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} `;
             li.appendChild(botonEliminar);
             listaAlumnosUl.appendChild(li);
     })}, 600))
@@ -200,6 +213,9 @@ function mostrarListaDeAlumnosOrdenada() {
 
     const listaAlumnosUl = document.getElementById("listaAlumnos");
     const mensajeCargando = document.getElementById("mensajeCargando");
+    const divAbierto = document.getElementById("contenedorLista");
+
+    divAbierto.style.display ="block";
 
     mensajeCargando.style.display = "block";
     
@@ -208,8 +224,16 @@ function mostrarListaDeAlumnosOrdenada() {
     listaAlumnosUl.innerHTML = "";
 
     // Recorre el array listaDeAlumnos y crea elementos <li> para cada alumno
-    setTimeout(() => {
+    if (listaDeAlumnos.length === 0 ) {
+        document.getElementById("p-lista").style.display = "block";
+
+        mensajeCargando.style.display = "none";
+        return;
+    }else{
+        setTimeout(() => {
         listaDeAlumnos.forEach((alumno, idx) => {
+            
+
             mensajeCargando.style.display = "none";
 
             const li = document.createElement("li");
@@ -217,7 +241,8 @@ function mostrarListaDeAlumnosOrdenada() {
 
             li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - Nota final: ${alumno.nota}`;
             listaAlumnosUl.appendChild(li);
-        })},600)
+        })},600)}
+    
 }
 
 
@@ -227,20 +252,39 @@ const mostrarAlumnosFiltrados = (alumnosFiltrados) => {
     const listaAlumnosUl = document.getElementById("listaAlumnos");
     const mensajeCargando = document.getElementById("mensajeCargando");
 
+    const divAbierto = document.getElementById("contenedorLista");
+
+    divAbierto.style.display ="block";
     mensajeCargando.style.display = "block";
     listaAlumnosUl.style.display = "block";
 
     listaAlumnosUl.innerHTML = "";
 
+
     // Recorre el array de alumnos filtrados y crea elementos <li> para cada alumno
-    setTimeout(()=> {
+
+    if (listaDeAlumnos.length === 0 ) {
+        
+        mensajeCargando.style.display = "none";
+        document.getElementById("p-lista").style.display = "block";
+
+        
+        return;
+    }else{
+        setTimeout(()=> {
         alumnosFiltrados.forEach((alumno, idx) => {
+
+            
+
             mensajeCargando.style.display = "none";
+             
 
             const li = document.createElement("li");
             li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - Nota final: ${alumno.nota}`;
             listaAlumnosUl.appendChild(li);
         });}, 600);
+    }
+    
     
 }
 
@@ -250,10 +294,7 @@ const mostrarAlumnosFiltrados = (alumnosFiltrados) => {
 // Función para ocultar la lista
 
 const ocultarLista = () => {
-    const listaAlumnosUl = document.getElementById("listaAlumnos");
-    listaAlumnosUl.style.display = "none";
-
-    document.getElementById("mensajeCargando").style.display = "none";
+    document.getElementById("contenedorLista").style.display = "none";
 }
 
 const botonOcultar = document.querySelector(".btn-ocultar");
@@ -265,7 +306,9 @@ botonOcultar.addEventListener("click", ocultarLista);
 const mayorParaMenor = () => {
     listaDeAlumnos.sort((a, b) => b.nota - a.nota);
 
+    ocultarMensajes();
     mostrarListaDeAlumnosOrdenada();
+
 }
 
 // Funcion para ordenar de menor a mayor nota
@@ -273,7 +316,9 @@ const mayorParaMenor = () => {
 const menorParaMayor = () => {
     listaDeAlumnos.sort((a, b) => a.nota - b.nota);
 
+    ocultarMensajes();
     mostrarListaDeAlumnosOrdenada();
+
 }
 
 // Función para mostrar aprobados
@@ -281,6 +326,15 @@ const menorParaMayor = () => {
 const aprobados = () => {
     const aprobados = listaDeAlumnos.filter(alumno => alumno.aprobado);
 
+    ocultarMensajes();
+
+
+    if (aprobados.length === 0) {
+        document.getElementById("emptyAprobados").style.display = "block";
+        document.getElementById("emptyDesaprobados").style.display = "none"; 
+    } else {
+        document.getElementById("emptyAprobados").style.display = "none";
+    }
 
     mostrarAlumnosFiltrados(aprobados);
 }
@@ -289,10 +343,28 @@ const aprobados = () => {
 // Función para mostrar desaprobados
 
 const desaprobados = () => {
+    ocultarMensajes();
+
     const desaprobados = listaDeAlumnos.filter(alumno => !alumno.aprobado);
 
+    if (desaprobados.length === 0) {
+        document.getElementById("emptyDesaprobados").style.display = "block";
+        document.getElementById("emptyAprobados").style.display = "none";
+        document.getElementById("mensajeCargando").style.display = "none";
+    } else {
+        document.getElementById("emptyDesaprobados").style.display = "none";
+    }
 
     mostrarAlumnosFiltrados(desaprobados);
+}
+
+
+
+// Función para ocultar mensajes 
+
+const ocultarMensajes = () => {
+    document.getElementById("emptyAprobados").style.display = "none";
+    document.getElementById("emptyDesaprobados").style.display = "none";
 }
 
 
@@ -308,29 +380,44 @@ const ordenarAlfabeto = () => {
         
     })
 
+    ocultarMensajes();
     mayorParaMenor();
 }
+
+// Función para eliminar alumno
 
 
 const eliminarAlumno = (idx) => {
     listaDeAlumnos.splice(idx, 1);
+    localStorage.setItem("listaDeAlumnos", JSON.stringify(listaDeAlumnos))
+
 
     mostrarListaDeAlumnos();
 }
 
 
+// Botón para filtrar de mayor a menor nota
+
 const botonMayorParaMenor = document.querySelector(".btn-mayorMenor");
 botonMayorParaMenor.addEventListener("click", mayorParaMenor);
 
 
+// Botón para filtrar de menor a mayor nota
+
 const botonMenorParaMayor = document.querySelector(".btn-menorMayor");
 botonMenorParaMayor.addEventListener("click", menorParaMayor);
+
+// Botón para filtrar por aprobados
 
 const botonAprobados = document.querySelector(".btn-aprobados");
 botonAprobados.addEventListener("click", aprobados);
 
+// Botón para filtrar desaprobados
+
 const botonDesaprobados = document.querySelector(".btn-desaprobados");
 botonDesaprobados.addEventListener("click", desaprobados);
+
+// Botón para filtrar por orden alfabético
 
 const botonAlfabeto = document.querySelector(".btn-alfabeto");
 botonAlfabeto.addEventListener("click", ordenarAlfabeto);
