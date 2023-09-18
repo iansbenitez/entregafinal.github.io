@@ -302,15 +302,16 @@ const mostrarAlumnosFiltrados = (alumnosFiltrados) => {
         return;
     }else{
         setTimeout(()=> {
-        alumnosFiltrados.forEach((alumno, idx) => {
-
+            alumnosFiltrados.sort((a, b) => b.nota - a.nota);
+            alumnosFiltrados.forEach((alumno, idx) => {
 
             mensajeCargando.style.display = "none";
              
 
             const li = document.createElement("li");
-            li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - Nota final: ${alumno.nota}`;
+            li.innerText= `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - Nota final: ${alumno.nota}`;
             listaAlumnosUl.appendChild(li);
+            
         });}, 600);
     }
     
