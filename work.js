@@ -49,16 +49,25 @@ function funcionAgregarAlumno() {
     // Manejo de errores de los datos ingresados
     if (!nombre || !isNaN(nombre) || !apellido || !isNaN(apellido) || isNaN(nota) || nota <1 || nota > 10) {
         document.getElementById("mensajeError").style.display = "block";
+
+        setTimeout(()=> {
+            document.getElementById("mensajeError").style.display = "none";
+        }, 2500);
         return;
     }else{
-        if (alumnoExistente(nombre, apellido)) {
+        if (alumnoExistente(nombre, apellido)) {setTimeout(()=> {
             document.getElementById("mensajeError").textContent = "El alumno ya existe.";
             document.getElementById("mensajeError").style.display = "block";
+        }, 2500);
+            
             return;
         }else{
             document.getElementById("mensajeOptimo").style.display = "block";
+            setTimeout(()=> {
+                document.getElementById("mensajeOptimo").style.display = "none";
+            }, 2500);
         }
-
+        
         
     }
 
@@ -183,13 +192,21 @@ function mostrarListaDeAlumnos() {
     listaAlumnosUl.style.display = "block";
 
     document.getElementById("p-lista").style.display = "none";
+    document.getElementById("emptyDesaprobados").style.display = "none";
+    document.getElementById("emptyAprobados").style.display = "none";
 
     listaAlumnosUl.innerHTML = "";
 
     if (listaDeAlumnos.length === 0 ) {
-        document.getElementById("p-lista").style.display = "block";
+        
+        setTimeout(()=> {
+            mensajeCargando.style.display = "none";
+        }, 600);
 
-        mensajeCargando.style.display = "none";
+        setTimeout(()=> {
+            document.getElementById("p-lista").style.display = "block";
+        }, 600);
+        
         return; 
     }else// Recorre el array listaDeAlumnos y crea elementos <li> para cada alumno
     (setTimeout(() =>  {
@@ -225,9 +242,11 @@ function mostrarListaDeAlumnosOrdenada() {
 
     // Recorre el array listaDeAlumnos y crea elementos <li> para cada alumno
     if (listaDeAlumnos.length === 0 ) {
-        document.getElementById("p-lista").style.display = "block";
+        setTimeout(()=> {
+            mensajeCargando.style.display = "none";
+        }, 600);
 
-        mensajeCargando.style.display = "none";
+        document.getElementById("p-lista").style.display = "block";
         return;
     }else{
         setTimeout(() => {
@@ -264,8 +283,11 @@ const mostrarAlumnosFiltrados = (alumnosFiltrados) => {
     // Recorre el array de alumnos filtrados y crea elementos <li> para cada alumno
 
     if (listaDeAlumnos.length === 0 ) {
+        setTimeout(()=> {
+            mensajeCargando.style.display = "none";
+        }, 600);
         
-        mensajeCargando.style.display = "none";
+        
         document.getElementById("p-lista").style.display = "block";
 
         
@@ -329,7 +351,10 @@ const aprobados = () => {
     ocultarMensajes();
 
 
-    if (aprobados.length === 0) {
+    if (aprobados.length === 0 && listaDeAlumnos.length > 0) {
+        setTimeout(()=> {
+            document.getElementById("mensajeCargando").style.display = "none";
+        }, 600);
         document.getElementById("emptyAprobados").style.display = "block";
         document.getElementById("emptyDesaprobados").style.display = "none"; 
     } else {
@@ -347,10 +372,15 @@ const desaprobados = () => {
 
     const desaprobados = listaDeAlumnos.filter(alumno => !alumno.aprobado);
 
-    if (desaprobados.length === 0) {
-        document.getElementById("emptyDesaprobados").style.display = "block";
+    if (desaprobados.length === 0 && listaDeAlumnos.length > 0) {
+        
+        setTimeout(()=> {
+            document.getElementById("mensajeCargando").style.display = "none";
+            document.getElementById("emptyDesaprobados").style.display = "block";
+        }, 600);
+
+        
         document.getElementById("emptyAprobados").style.display = "none";
-        document.getElementById("mensajeCargando").style.display = "none";
     } else {
         document.getElementById("emptyDesaprobados").style.display = "none";
     }
