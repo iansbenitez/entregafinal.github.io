@@ -245,11 +245,14 @@ function mostrarListaDeAlumnosOrdenada() {
 
     // Recorre el array listaDeAlumnos y crea elementos <li> para cada alumno
     if (listaDeAlumnos.length === 0 ) {
+        document.getElementById("p-lista").style.display = "none";
+
         setTimeout(()=> {
             mensajeCargando.style.display = "none";
+            document.getElementById("p-lista").style.display = "block";
         }, 600);
 
-        document.getElementById("p-lista").style.display = "block";
+        
         return;
     }else{
         setTimeout(() => {
@@ -276,6 +279,8 @@ const mostrarAlumnosFiltrados = (alumnosFiltrados) => {
 
     const divAbierto = document.getElementById("contenedorLista");
 
+    document.getElementById("p-lista").style.display = "none";
+
     divAbierto.style.display ="block";
     mensajeCargando.style.display = "block";
     listaAlumnosUl.style.display = "block";
@@ -288,18 +293,16 @@ const mostrarAlumnosFiltrados = (alumnosFiltrados) => {
     if (listaDeAlumnos.length === 0 ) {
         setTimeout(()=> {
             mensajeCargando.style.display = "none";
+            document.getElementById("p-lista").style.display = "block";
+
         }, 600);
         
-        
-        document.getElementById("p-lista").style.display = "block";
-
         
         return;
     }else{
         setTimeout(()=> {
         alumnosFiltrados.forEach((alumno, idx) => {
 
-            
 
             mensajeCargando.style.display = "none";
              
@@ -357,6 +360,7 @@ const aprobados = () => {
     if (aprobados.length === 0 && listaDeAlumnos.length > 0) {
         setTimeout(()=> {
             document.getElementById("mensajeCargando").style.display = "none";
+            document.getElementById("p-lista").style.display = "block";
         }, 600);
         document.getElementById("emptyAprobados").style.display = "block";
         document.getElementById("emptyDesaprobados").style.display = "none"; 
