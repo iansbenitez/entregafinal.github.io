@@ -255,6 +255,7 @@ function mostrarListaDeAlumnosOrdenada() {
         
         return;
     }else{
+        document.getElementById("p-lista").style.display = "none";
         setTimeout(() => {
         listaDeAlumnos.forEach((alumno, idx) => {
             
@@ -358,11 +359,11 @@ const aprobados = () => {
 
 
     if (aprobados.length === 0 && listaDeAlumnos.length > 0) {
+        document.getElementById("emptyAprobados").style.display = "none";
         setTimeout(()=> {
             document.getElementById("mensajeCargando").style.display = "none";
-            document.getElementById("p-lista").style.display = "block";
+            document.getElementById("emptyAprobados").style.display = "block";
         }, 600);
-        document.getElementById("emptyAprobados").style.display = "block";
         document.getElementById("emptyDesaprobados").style.display = "none"; 
     } else {
         document.getElementById("emptyAprobados").style.display = "none";
