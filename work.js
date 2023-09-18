@@ -419,7 +419,7 @@ const ordenarAlfabeto = () => {
     })
 
     ocultarMensajes();
-    mayorParaMenor();
+    mostrarListaDeAlumnosOrdenada();
 }
 
 // Función para eliminar alumno
