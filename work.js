@@ -55,9 +55,12 @@ function funcionAgregarAlumno() {
         }, 2500);
         return;
     }else{
-        if (alumnoExistente(nombre, apellido)) {setTimeout(()=> {
+        if (alumnoExistente(nombre, apellido)) {
             document.getElementById("mensajeError").textContent = "El alumno ya existe.";
             document.getElementById("mensajeError").style.display = "block";
+            setTimeout(()=> {
+                document.getElementById("mensajeError").style.display = "none";
+            
         }, 2500);
             
             return;
