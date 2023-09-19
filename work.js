@@ -165,7 +165,7 @@ contenedorLista.style.display = "none";
 
 contenedorLista.innerHTML = `
 <ul id="listaAlumnos"></ul>
-<p id="mensajeCargando" style="display: none;">Cargando...</p>
+<div class="loader" id="mensajeCargando" style= "display:none;"></div>
 <p id="p-lista"> Aún no hay alumnos, por favor ingresar. </p>
 <p id="emptyAprobados" style="display: none;">No hay alumnos aprobados.</p>
 <p id="emptyDesaprobados" style="display: none;">No hay alumnos desaprobados.</p>
