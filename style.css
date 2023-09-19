@@ -131,8 +131,8 @@ p {
 }
 
 .loader {
-    border: 8px solid #f3f3f3; /* Light grey */
-    border-top: 8px solid #3498db; /* Blue */
+    border: 8px solid rgba(216, 74, 74, 0.55); /* Light grey */
+    border-top: 8px solid gold; /* Blue */
     border-radius: 50%;
     position: relative;
     left: 45% !important;
