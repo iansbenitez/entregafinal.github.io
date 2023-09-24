@@ -530,9 +530,9 @@ const sweetAlertEliminar = (idx) => {
 if (listaDeAlumnos.length === 0) {
     fetch('api.json')
         .then(response => response.json())
-        .then(data => {
-            data.push(...nuevoAlumno);
-            localStorage.setItem('listaDeAlumnos', JSON.stringify(data));
+        .then(response => {
+            listaDeAlumnos.push(...response);
+            localStorage.setItem('listaDeAlumnos', JSON.stringify(response));
         })
 }
 
