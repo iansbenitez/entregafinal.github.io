@@ -42,7 +42,7 @@ function alumnoExistente(nombre, apellido) {
 
 function funcionAgregarAlumno() {
 
-    // Variables para el constructor obtenidas de los inputs
+    // Variables para el constructor obtenidas de los inputs, utilizando la función para remover acentos y la función trim que encontré y apliqué el trabajo anterior, que elimina los espacios vacíos para así validar de manera mas correcta los datos ingresados y comparalos correctamente y no duplicarlos.
     let nombre = removeAccents(document.getElementById("nombreInput").value.trim());
     let apellido = removeAccents(document.getElementById("apellido").value.trim());
     let nota = parseInt(document.getElementById("nota").value.trim());
@@ -62,7 +62,8 @@ function funcionAgregarAlumno() {
             }
         }).showToast();
         return;
-    }
+    } 
+    // Aplicación de función para validar si el alumno ya existe
     if (alumnoExistente(nombre, apellido)) {
         Toastify({
             text: "El alumno ya existe en la base de datos.",
@@ -554,34 +555,3 @@ botonDesaprobados.addEventListener("click", desaprobados);
 
 const botonAlfabeto = document.querySelector(".btn-alfabeto");
 botonAlfabeto.addEventListener("click", ordenarAlfabeto);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
