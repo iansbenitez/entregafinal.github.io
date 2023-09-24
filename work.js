@@ -92,6 +92,13 @@ function funcionAgregarAlumno() {
 
     // Pusheo al array con el proceso JSON
     listaDeAlumnos.push(nuevoAlumno);
+
+
+    //Si la lista está abierta al momento de agregar un alumno se actualiza automáticamente y recarga la lista con el alumno nuevo. De estar cerrada, solo sale el toastify y no se abre.
+    if (listaAbierta === true) {
+        mostrarListaDeAlumnos()
+    }
+
     Toastify({
         text: "Alumno agregado.",
         duration: 3000,
@@ -195,9 +202,11 @@ botonMostrar.addEventListener("click", mostrarListaDeAlumnos);
 
 // Constante y función para mostrar el array listaDeAlumnos en una lista
 
-
+let listaAbierta = false;
 
 function mostrarListaDeAlumnos() {
+
+    listaAbierta = true;
 
     const listaAlumnosUl = document.getElementById("listaAlumnos");
     const mensajeCargando = document.getElementById("mensajeCargando");
@@ -482,8 +491,6 @@ const eliminarAlumno = (idx) => {
     mostrarListaDeAlumnos();
 }
 
-// Función para editar nota 
-
 
 
 
@@ -523,8 +530,9 @@ const sweetAlertEliminar = (idx) => {
 if (listaDeAlumnos.length === 0) {
     fetch('api.json')
         .then(response => response.json())
-        .then(response => {
-            listaDeAlumnos.push(...response)
+        .then(data => {
+            data.push(...nuevoAlumno);
+            localStorage.setItem('listaDeAlumnos', JSON.stringify(data));
         })
 }
 
