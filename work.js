@@ -1,3 +1,10 @@
+// Función encontrada en StackOverflow para quitar caracteres especiales y podes validar correctamente
+
+const removeAccents = (str) => {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+
 // constante y constructor alumnos
 
 const listaDeAlumnos = JSON.parse(localStorage.getItem("listaDeAlumnos")) || [];
@@ -35,59 +42,70 @@ function alumnoExistente(nombre, apellido) {
 
 function funcionAgregarAlumno() {
 
-    // Mensajes de error y éxito
-    document.getElementById("mensajeError").style.display = "none";
-    document.getElementById("mensajeOptimo").style.display = "none";
-
-
     // Variables para el constructor obtenidas de los inputs
-    let nombre = document.getElementById("nombreInput").value;
-    let apellido = document.getElementById("apellido").value;
-    let nota = parseInt(document.getElementById("nota").value);
+    let nombre = removeAccents(document.getElementById("nombreInput").value.trim());
+    let apellido = removeAccents(document.getElementById("apellido").value.trim());
+    let nota = parseInt(document.getElementById("nota").value.trim());
 
 
     // Manejo de errores de los datos ingresados
-    if (!nombre || !isNaN(nombre) || !apellido || !isNaN(apellido) || isNaN(nota) || nota <1 || nota > 10) {
-        document.getElementById("mensajeError").style.display = "block";
-
-        setTimeout(()=> {
-            document.getElementById("mensajeError").style.display = "none";
-        }, 2500);
+    if (!nombre || !isNaN(nombre) || !apellido || !isNaN(apellido) || isNaN(nota) || nota < 1 || nota > 10) {
+        Toastify({
+            text: "Por favor, complete todos los campos. Notas de 1 a 10 únicamente.",
+            duration: 3000,
+            close: true,
+            gravity: "bottom",
+            position: "right",
+            stopOnFocus: true,
+            style: {
+                background: "#ff0000",
+            }
+        }).showToast();
         return;
-    }else{
-        if (alumnoExistente(nombre, apellido)) {
-            document.getElementById("mensajeError").textContent = "El alumno ya existe.";
-            document.getElementById("mensajeError").style.display = "block";
-            setTimeout(()=> {
-                document.getElementById("mensajeError").style.display = "none";
-            
-        }, 2500);
-            
-            return;
-        }else{
-            document.getElementById("mensajeOptimo").style.display = "block";
-            setTimeout(()=> {
-                document.getElementById("mensajeOptimo").style.display = "none";
-            }, 2500);
-        }
-        
-        
+    }
+    if (alumnoExistente(nombre, apellido)) {
+        Toastify({
+            text: "El alumno ya existe en la base de datos.",
+            duration: 3000,
+            close: true,
+            gravity: "bottom",
+            position: "right",
+            stopOnFocus: true,
+            style: {
+                background: "#ffff00",
+                color: "#000000",
+            }
+        }).showToast();
+
+        return;
     }
 
 
-    
+
+
+
+
     // Finalización clase constructora
     let nuevoAlumno = new Alumno(nombre, apellido, nota);
 
 
     // Pusheo al array con el proceso JSON
     listaDeAlumnos.push(nuevoAlumno);
+    Toastify({
+        text: "Alumno agregado.",
+        duration: 3000,
+        gravity: "bottom",
+        position: "right",
+        style: {
+            background: "#008000",
+        }
+    }).showToast();
     localStorage.setItem("listaDeAlumnos", JSON.stringify(listaDeAlumnos));
 
     // Automáticamente se abre la lista
 
     mostrarListaDeAlumnos();
-    
+
 
     //Reseteo de inputs
     document.getElementById("nombreInput").value = "";
@@ -109,9 +127,7 @@ contenedorDatos.innerHTML = `
 <input type="text" id="apellido" placeholder="Ingresar apellido..." />
 <input type="number" id="nota" placeholder="ingresar nota..." />
 <input type="button" id="enviarDatos" class="btn-filtro" min="1" max="10" value="Enviar Datos" />
-</form>
-<p id="mensajeError">Por favor, complete todos los campos.<br>Notas de 1 a 10 únicamente.</p>
-<p id="mensajeOptimo"> Alumno agregado, gracias.</p>`;
+</form>`;
 
 document.body.append(contenedorDatos);
 
@@ -150,7 +166,7 @@ contenedorBotones.innerHTML = `
     <button type="button" class="btn btn-interno btn-collapse btn-alfabeto">Alfabeticamente</button>
   </div>
 </div>
-`
+<div><input id="inputSearch" type="search" placeholder="Ingrese el nombre del alumno a buscar..."/></div>`
 
 document.body.append(contenedorBotones);
 
@@ -160,7 +176,7 @@ document.body.append(contenedorBotones);
 // Creación contenedor lista
 
 let contenedorLista = document.createElement("div")
-contenedorLista.id= "contenedorLista";
+contenedorLista.id = "contenedorLista";
 contenedorLista.style.display = "none";
 
 contenedorLista.innerHTML = `
@@ -169,6 +185,7 @@ contenedorLista.innerHTML = `
 <p id="p-lista"> Aún no hay alumnos, por favor ingresar. </p>
 <p id="emptyAprobados" style="display: none;">No hay alumnos aprobados.</p>
 <p id="emptyDesaprobados" style="display: none;">No hay alumnos desaprobados.</p>
+<p id="sinCoincidencias" style="display:none;">No se encontraron coincidencias</p>
 `
 
 document.body.append(contenedorLista)
@@ -194,36 +211,39 @@ function mostrarListaDeAlumnos() {
     mensajeCargando.style.display = "block";
     listaAlumnosUl.style.display = "block";
 
+    listaAlumnosUl.innerHTML = "";
+
     document.getElementById("p-lista").style.display = "none";
     document.getElementById("emptyDesaprobados").style.display = "none";
     document.getElementById("emptyAprobados").style.display = "none";
 
-    listaAlumnosUl.innerHTML = "";
 
-    if (listaDeAlumnos.length === 0 ) {
-        
-        setTimeout(()=> {
+
+    if (listaDeAlumnos.length === 0) {
+
+        setTimeout(() => {
             mensajeCargando.style.display = "none";
         }, 600);
 
-        setTimeout(()=> {
+        setTimeout(() => {
             document.getElementById("p-lista").style.display = "block";
         }, 600);
-        
-        return; 
-    }else// Recorre el array listaDeAlumnos y crea elementos <li> para cada alumno
-    (setTimeout(() =>  {
-        mensajeCargando.style.display = "none";
 
-        listaDeAlumnos.forEach((alumno, idx) => {
-            const li = document.createElement("li");
-            const botonEliminar = document.createElement("button");
-            botonEliminar.innerText = "Eliminar";
-            botonEliminar.addEventListener("click", () =>  eliminarAlumno(idx));
-            li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} `;
-            li.appendChild(botonEliminar);
-            listaAlumnosUl.appendChild(li);
-    })}, 600))
+        return;
+    } else// Recorre el array listaDeAlumnos y crea elementos <li> para cada alumno
+        (setTimeout(() => {
+            mensajeCargando.style.display = "none";
+
+            listaDeAlumnos.forEach((alumno, idx) => {
+                const li = document.createElement("li");
+                const botonEliminar = document.createElement("button");
+                botonEliminar.innerText = "Eliminar";
+                botonEliminar.addEventListener("click", () => sweetAlertEliminar(idx));
+                li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} `;
+                li.appendChild(botonEliminar);
+                listaAlumnosUl.appendChild(li);
+            })
+        }, 600))
 }
 
 
@@ -235,40 +255,42 @@ function mostrarListaDeAlumnosOrdenada() {
     const mensajeCargando = document.getElementById("mensajeCargando");
     const divAbierto = document.getElementById("contenedorLista");
 
-    divAbierto.style.display ="block";
+    divAbierto.style.display = "block";
 
     mensajeCargando.style.display = "block";
-    
+
     listaAlumnosUl.style.display = "block";
 
     listaAlumnosUl.innerHTML = "";
 
     // Recorre el array listaDeAlumnos y crea elementos <li> para cada alumno
-    if (listaDeAlumnos.length === 0 ) {
+    if (listaDeAlumnos.length === 0) {
         document.getElementById("p-lista").style.display = "none";
 
-        setTimeout(()=> {
+        setTimeout(() => {
             mensajeCargando.style.display = "none";
             document.getElementById("p-lista").style.display = "block";
         }, 600);
 
-        
+
         return;
-    }else{
+    } else {
         document.getElementById("p-lista").style.display = "none";
         setTimeout(() => {
-        listaDeAlumnos.forEach((alumno, idx) => {
-            
+            listaDeAlumnos.forEach((alumno, idx) => {
 
-            mensajeCargando.style.display = "none";
 
-            const li = document.createElement("li");
-            
+                mensajeCargando.style.display = "none";
 
-            li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - Nota final: ${alumno.nota}`;
-            listaAlumnosUl.appendChild(li);
-        })},600)}
-    
+                const li = document.createElement("li");
+
+                li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - Nota final: ${alumno.nota}`;
+                listaAlumnosUl.appendChild(li);
+            })
+        }, 600)
+    }
+
+    listaAlumnosUl.innerHTML = "";
 }
 
 
@@ -280,45 +302,75 @@ const mostrarAlumnosFiltrados = (alumnosFiltrados) => {
 
     const divAbierto = document.getElementById("contenedorLista");
 
+    listaAlumnosUl.innerHTML = "";
+
     document.getElementById("p-lista").style.display = "none";
 
-    divAbierto.style.display ="block";
+    divAbierto.style.display = "block";
     mensajeCargando.style.display = "block";
     listaAlumnosUl.style.display = "block";
 
-    listaAlumnosUl.innerHTML = "";
+
 
 
     // Recorre el array de alumnos filtrados y crea elementos <li> para cada alumno
 
-    if (listaDeAlumnos.length === 0 ) {
-        setTimeout(()=> {
+    if (listaDeAlumnos.length === 0) {
+        setTimeout(() => {
             mensajeCargando.style.display = "none";
             document.getElementById("p-lista").style.display = "block";
 
         }, 600);
-        
-        
+
+
         return;
-    }else{
-        setTimeout(()=> {
+    } else {
+        setTimeout(() => {
             alumnosFiltrados.sort((a, b) => b.nota - a.nota);
             alumnosFiltrados.forEach((alumno, idx) => {
 
-            mensajeCargando.style.display = "none";
-             
+                mensajeCargando.style.display = "none";
 
-            const li = document.createElement("li");
-            li.innerText= `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - Nota final: ${alumno.nota}`;
-            listaAlumnosUl.appendChild(li);
-            
-        });}, 600);
+                const li = document.createElement("li");
+                li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - Nota final: ${alumno.nota}`;
+                listaAlumnosUl.appendChild(li);
+
+            });
+        }, 600);
     }
-    
-    
+
+
 }
 
 
+
+// Función para buscar alumnos por nombre y apellido 
+let timeoutId;
+
+const busqueda = () => {
+    clearTimeout(timeoutId);
+
+    const buscarInput = document.getElementById("inputSearch").value.toUpperCase();
+    const listaAlumnosUl = document.getElementById("listaAlumnos");
+
+    listaAlumnosUl.innerHTML = "";
+
+    if (buscarInput === "") {
+        mostrarListaDeAlumnosOrdenada();
+    } else {
+        timeoutId = setTimeout(() => {
+            const resultados = listaDeAlumnos.filter(alumno => {
+                document.getElementById("sinCoincidencias").style.display = "none";
+                const nombreCompleto = `${alumno.nombre} ${alumno.apellido}`.toUpperCase();
+                return nombreCompleto.includes(buscarInput);
+            });
+            mostrarAlumnosFiltrados(resultados);
+        }, 300);
+    }
+}
+
+const inputSearch = document.getElementById("inputSearch");
+inputSearch.addEventListener("input", busqueda);
 
 
 // Función para ocultar la lista
@@ -361,11 +413,11 @@ const aprobados = () => {
 
     if (aprobados.length === 0 && listaDeAlumnos.length > 0) {
         document.getElementById("emptyAprobados").style.display = "none";
-        setTimeout(()=> {
+        setTimeout(() => {
             document.getElementById("mensajeCargando").style.display = "none";
             document.getElementById("emptyAprobados").style.display = "block";
         }, 600);
-        document.getElementById("emptyDesaprobados").style.display = "none"; 
+        document.getElementById("emptyDesaprobados").style.display = "none";
     } else {
         document.getElementById("emptyAprobados").style.display = "none";
     }
@@ -382,13 +434,13 @@ const desaprobados = () => {
     const desaprobados = listaDeAlumnos.filter(alumno => !alumno.aprobado);
 
     if (desaprobados.length === 0 && listaDeAlumnos.length > 0) {
-        
-        setTimeout(()=> {
+
+        setTimeout(() => {
             document.getElementById("mensajeCargando").style.display = "none";
             document.getElementById("emptyDesaprobados").style.display = "block";
         }, 600);
 
-        
+
         document.getElementById("emptyAprobados").style.display = "none";
     } else {
         document.getElementById("emptyDesaprobados").style.display = "none";
@@ -416,7 +468,7 @@ const ordenarAlfabeto = () => {
 
         return nombreA < nombreB ? -1 : nombreA > nombreB ? 1 : 0;
 
-        
+
     })
 
     ocultarMensajes();
@@ -430,9 +482,55 @@ const eliminarAlumno = (idx) => {
     listaDeAlumnos.splice(idx, 1);
     localStorage.setItem("listaDeAlumnos", JSON.stringify(listaDeAlumnos))
 
-
     mostrarListaDeAlumnos();
 }
+
+// Función para editar nota 
+
+
+
+
+// Funcion sweet alert eliminar alumno
+
+const sweetAlertEliminar = (idx) => {
+    Swal.fire({
+        text: 'Estas seguro? Vas a eliminar un alumno',
+        showDenyButton: true,
+        confirmButtonText: 'Confirmar',
+        denyButtonText: `Cancelar`,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            eliminarAlumno(idx);
+            Toastify({
+                text: "Alumno eliminado.",
+                duration: 3000,
+                gravity: "bottom",
+                position: "right",
+                style: {
+                    background: "#ff0000",
+                }
+            }).showToast();
+        } else if (result.isDenied) {
+            Swal.fire({
+                text: 'No se eliminará el alumno',
+            })
+        }
+    })
+}
+
+
+
+
+// Fetch
+
+if (listaDeAlumnos.length === 0) {
+    fetch('api.json')
+        .then(response => response.json())
+        .then(response => {
+            listaDeAlumnos.push(...response)
+        })
+}
+
 
 
 // Botón para filtrar de mayor a menor nota

@@ -130,6 +130,12 @@ p {
     border-radius: 10px;
 }
 
+#inputSearch {
+    background-color: gold;
+    color: black;
+    width: 300px;
+}
+
 .loader {
     border: 8px solid rgba(216, 74, 74, 0.55); /* Light grey */
     border-top: 8px solid gold; /* Blue */
