@@ -102,10 +102,6 @@ function funcionAgregarAlumno() {
     }).showToast();
     localStorage.setItem("listaDeAlumnos", JSON.stringify(listaDeAlumnos));
 
-    // Automáticamente se abre la lista
-
-    mostrarListaDeAlumnos();
-
 
     //Reseteo de inputs
     document.getElementById("nombreInput").value = "";
