@@ -462,7 +462,7 @@ const mostrarListaEditar = () => {
 
                         Swal.fire({
                             icon: 'question',
-                            text: `Estas seguro de editar la nota de ${alumno.nombre}? 
+                            text: `Estas seguro de editar la nota de ${alumno.nombre} ${alumno.apellido}? 
                             La nota actual es ${alumno.nota} y la estas cambiando por ${nuevaNota}`,
                             allowEscapeKey: true,
                             showDenyButton: true,
@@ -679,9 +679,11 @@ const eliminarAlumno = (idx) => {
 // Funcion sweet alert eliminar alumno
 
 const sweetAlertEliminar = (idx) => {
+    const alumnoEliminar = listaDeAlumnos[idx];
+    
     Swal.fire({
         icon: 'warning',
-        text: 'Estas seguro? Vas a eliminar un alumno',
+        text: `Estás seguro? Vas a eliminar al alumno ${alumnoEliminar.nombre} ${alumnoEliminar.apellido}`,
         showDenyButton: true,
         confirmButtonText: 'Confirmar',
         denyButtonText: `Cancelar`,
