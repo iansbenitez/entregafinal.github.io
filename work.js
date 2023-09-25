@@ -62,7 +62,7 @@ function funcionAgregarAlumno() {
             }
         }).showToast();
         return;
-    } 
+    }
     // Aplicación de función para validar si el alumno ya existe
     if (alumnoExistente(nombre, apellido)) {
         Toastify({
@@ -156,6 +156,7 @@ contenedorBotones.innerHTML = `
 
 <button type="button" class="btn btn-mostrar">Mostrar</button>
 <button type="button" class="btn btn-ocultar">Ocultar</button>
+<button type="button" class="btn btn-editar">Editar nota</button>
 <p class="d-inline-flex gap-1">
   <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
     Aplicar filtro por:
@@ -193,9 +194,6 @@ contenedorLista.innerHTML = `
 `
 
 document.body.append(contenedorLista)
-
-const botonMostrar = document.querySelector(".btn-mostrar");
-botonMostrar.addEventListener("click", mostrarListaDeAlumnos);
 
 
 
@@ -236,16 +234,19 @@ function mostrarListaDeAlumnos() {
         }, 600);
 
         return;
-    } else// Recorre el array listaDeAlumnos y crea elementos <li> para cada alumno
+    } else// Recorre el array listaDeAlumnos y crea un li para cada uno
         (setTimeout(() => {
             mensajeCargando.style.display = "none";
 
             listaDeAlumnos.forEach((alumno, idx) => {
                 const li = document.createElement("li");
+
+
                 const botonEliminar = document.createElement("button");
                 botonEliminar.innerText = "Eliminar";
                 botonEliminar.addEventListener("click", () => sweetAlertEliminar(idx));
-                li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} `;
+                li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - Nota final: ${alumno.nota} `;
+
                 li.appendChild(botonEliminar);
                 listaAlumnosUl.appendChild(li);
             })
@@ -289,8 +290,11 @@ function mostrarListaDeAlumnosOrdenada() {
                 mensajeCargando.style.display = "none";
 
                 const li = document.createElement("li");
-
+                const botonEliminar = document.createElement("button");
+                botonEliminar.innerText = "Eliminar";
+                botonEliminar.addEventListener("click", () => sweetAlertEliminar(idx));
                 li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - Nota final: ${alumno.nota}`;
+                li.appendChild(botonEliminar);
                 listaAlumnosUl.appendChild(li);
             })
         }, 600)
@@ -338,7 +342,11 @@ const mostrarAlumnosFiltrados = (alumnosFiltrados) => {
                 mensajeCargando.style.display = "none";
 
                 const li = document.createElement("li");
+                const botonEliminar = document.createElement("button");
+                botonEliminar.innerText = "Eliminar";
+                botonEliminar.addEventListener("click", () => sweetAlertEliminar(idx));
                 li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - Nota final: ${alumno.nota}`;
+                li.appendChild(botonEliminar);
                 listaAlumnosUl.appendChild(li);
 
             });
@@ -384,7 +392,7 @@ const mostrarAlumnosFiltradosBusqueda = (alumnosFiltrados) => {
             alumnosFiltrados.forEach((alumno, idx) => {
 
                 mensajeCargando.style.display = "none";
-                
+
                 const li = document.createElement("li");
                 const botonEliminar = document.createElement("button");
                 botonEliminar.innerText = "Eliminar";
@@ -399,6 +407,130 @@ const mostrarAlumnosFiltradosBusqueda = (alumnosFiltrados) => {
 
 
 }
+
+// Función mostrar para editar
+
+const mostrarListaEditar = () => {
+    const listaAlumnosUl = document.getElementById("listaAlumnos");
+    const mensajeCargando = document.getElementById("mensajeCargando");
+    const divOculto = document.getElementById("contenedorLista");
+
+    divOculto.style.display = "block";
+
+    mensajeCargando.style.display = "block";
+    listaAlumnosUl.style.display = "block";
+
+    listaAlumnosUl.innerHTML = "";
+
+    document.getElementById("p-lista").style.display = "none";
+    document.getElementById("emptyDesaprobados").style.display = "none";
+    document.getElementById("emptyAprobados").style.display = "none";
+
+
+
+    if (listaDeAlumnos.length === 0) {
+
+        setTimeout(() => {
+            mensajeCargando.style.display = "none";
+        }, 600);
+
+        setTimeout(() => {
+            document.getElementById("p-lista").style.display = "block";
+        }, 600);
+
+        return;
+    } else// Recorre el array listaDeAlumnos y crea un li para cada uno
+        (setTimeout(() => {
+            mensajeCargando.style.display = "none";
+
+            listaDeAlumnos.forEach((alumno, idx) => {
+                const li = document.createElement("li");
+                const divDivisor = document.createElement("div")
+                divDivisor.id = "divDivisor"
+                const inputEditar = document.createElement("input");
+                inputEditar.className = "inputEditar";
+                inputEditar.id = `inputEditar-${idx}`;
+                inputEditar.placeholder = "Nueva nota."
+                inputEditar.dataset.idx = idx;
+                const botonEditar = document.createElement("button");
+                botonEditar.id = "botonEditar";
+                botonEditar.innerText = "Editar nota.";
+                botonEditar.addEventListener("click", () => {
+                    const idx = inputEditar.dataset.idx; // Obten el índice del atributo data-idx
+                    const nuevaNota = parseFloat(document.getElementById(`inputEditar-${idx}`).value); // Obtén el valor del input
+                    if (!isNaN(nuevaNota) && nuevaNota >= 1 && nuevaNota <= 10 && alumno.nota != nuevaNota) {
+
+                        Swal.fire({
+                            icon: 'question',
+                            text: `Estas seguro de editar la nota de ${alumno.nombre}? 
+                            La nota actual es ${alumno.nota} y la estas cambiando por ${nuevaNota}`,
+                            allowEscapeKey: true,
+                            showDenyButton: true,
+                            confirmButtonText: 'Confirmar',
+                            denyButtonText: `Cancelar`,
+                            background: "#001000",
+                            color: "#fff"
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Actualiza la nota del alumno en el array
+                                listaDeAlumnos[idx].nota = nuevaNota;
+                                // Actualiza el valor aprobado
+                                listaDeAlumnos[idx].aprobado = nuevaNota >= 7;
+                                // Actualiza el almacenamiento local
+                                localStorage.setItem("listaDeAlumnos", JSON.stringify(listaDeAlumnos));
+                                Toastify({
+                                    text: "Nota actualizada.",
+                                    duration: 3000,
+                                    gravity: "bottom",
+                                    position: "right",
+                                    style: {
+                                        background: "#008000",
+                                    }
+                                }).showToast();
+                                // Vuelve a mostrar la lista de alumnos actualizada
+                                mostrarListaDeAlumnos();
+                            } else if (result.isDenied) {
+                                Swal.fire({
+                                    text: 'No se editará la nota',
+                                    allowEscapeKey: true,
+                                    background: "#001000",
+                                    color: "#fff"
+                                })
+                                inputEditar.value = "";
+                            }
+
+                        })
+
+                    } else if (alumno.nota === nuevaNota) {
+                        Swal.fire({
+                            text: 'Estás ingresando el mismo valor de nota pre existente.',
+                            allowEscapeKey: true,
+                            background: "#001000",
+                            color: "#fff"
+                        })
+                        inputEditar.value = "";
+                    } else {
+                        Swal.fire({
+                            text: 'Por favor ingresar números, entre 1 y 10.',
+                            allowEscapeKey: true,
+                            background: "#001000",
+                            color: "#fff"
+                        })
+                        inputEditar.value = "";
+                    }
+                });
+
+                li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - Nota final: ${alumno.nota} `;
+                li.appendChild(divDivisor);
+                divDivisor.appendChild(inputEditar);
+                divDivisor.appendChild(botonEditar);
+                listaAlumnosUl.appendChild(li);
+            })
+        }, 600))
+}
+
+
+
 
 // Función para buscar alumnos por nombre y apellido 
 let timeoutId;
@@ -548,12 +680,17 @@ const eliminarAlumno = (idx) => {
 
 const sweetAlertEliminar = (idx) => {
     Swal.fire({
+        icon: 'warning',
         text: 'Estas seguro? Vas a eliminar un alumno',
         showDenyButton: true,
         confirmButtonText: 'Confirmar',
         denyButtonText: `Cancelar`,
+        allowEscapeKey: true,
+        background: "#001000",
+        color: "#fff"
     }).then((result) => {
         if (result.isConfirmed) {
+            
             eliminarAlumno(idx);
             Toastify({
                 text: "Alumno eliminado.",
@@ -566,12 +703,15 @@ const sweetAlertEliminar = (idx) => {
             }).showToast();
         } else if (result.isDenied) {
             Swal.fire({
+                icon: 'error',
                 text: 'No se eliminará el alumno',
+                allowEscapeKey: true,
+                background: "#001000",
+                color: "#fff"
             })
         }
     })
 }
-
 
 
 
@@ -587,6 +727,11 @@ if (listaDeAlumnos.length === 0) {
 }
 
 
+
+// Botón para mostrar lista
+
+const botonMostrar = document.querySelector(".btn-mostrar");
+botonMostrar.addEventListener("click", mostrarListaDeAlumnos);
 
 // Botón para filtrar de mayor a menor nota
 
@@ -613,3 +758,9 @@ botonDesaprobados.addEventListener("click", desaprobados);
 
 const botonAlfabeto = document.querySelector(".btn-alfabeto");
 botonAlfabeto.addEventListener("click", ordenarAlfabeto);
+
+
+// Botón para mostrar lista para editar
+
+const botonEditarDom = document.querySelector(".btn-editar");
+botonEditarDom.addEventListener("click", mostrarListaEditar)

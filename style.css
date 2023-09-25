@@ -109,6 +109,7 @@ p {
 }
 
 #contenedorLista ul {
+    width: 100%;
     list-style: none;
 }
 
@@ -119,6 +120,7 @@ p {
 
 
 #listaAlumnos li {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -151,6 +153,20 @@ p {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+
+#divDivisor {
+    height: 30px;
+    width: 30%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.inputEditar {
+    margin-top: 5px;
+
+    height: 90%;
+    width: 90px;
+}
 
 
 
