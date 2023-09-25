@@ -452,6 +452,7 @@ const mostrarListaEditar = () => {
                 inputEditar.id = `inputEditar-${idx}`;
                 inputEditar.placeholder = "Nueva nota."
                 inputEditar.dataset.idx = idx;
+                inputEditar.type = "number";
                 const botonEditar = document.createElement("button");
                 botonEditar.id = "botonEditar";
                 botonEditar.innerText = "Editar nota.";
@@ -488,7 +489,7 @@ const mostrarListaEditar = () => {
                                     }
                                 }).showToast();
                                 // Vuelve a mostrar la lista de alumnos actualizada
-                                mostrarListaDeAlumnos();
+                                mostrarListaEditar();
                             } else if (result.isDenied) {
                                 Swal.fire({
                                     text: 'No se editará la nota',

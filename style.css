@@ -132,10 +132,38 @@ p {
     border-radius: 10px;
 }
 
+#nombreInput {
+    outline: 0;
+}
+#nombreInput:focus {
+    border: 2px solid gold;
+}
+
+#apellido {
+    outline: 0;
+}
+#apellido:focus {
+    border: 2px solid gold;
+}
+
+#nota {
+    outline: 0;
+}
+#nota:focus {
+    border: 2px solid gold;
+}
+
+
 #inputSearch {
     background-color: gold;
     color: black;
     width: 300px;
+    border: 0;
+    outline: 0;
+}
+
+#inputSearch:focus {
+    border: 2px solid rgb(153, 0, 0);
 }
 
 .loader {
@@ -163,9 +191,14 @@ p {
 
 .inputEditar {
     margin-top: 5px;
-
+    border: 0;
     height: 90%;
     width: 90px;
+    outline: 0;
+}
+
+.inputEditar:focus {
+    border: 2px solid rgb(168, 143, 3);
 }
 
 .custom-container {
