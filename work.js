@@ -348,7 +348,57 @@ const mostrarAlumnosFiltrados = (alumnosFiltrados) => {
 
 }
 
+// Función para filtrar alumnos por busqueda
 
+const mostrarAlumnosFiltradosBusqueda = (alumnosFiltrados) => {
+    const listaAlumnosUl = document.getElementById("listaAlumnos");
+    const mensajeCargando = document.getElementById("mensajeCargando");
+
+    const divAbierto = document.getElementById("contenedorLista");
+
+    listaAlumnosUl.innerHTML = "";
+
+    document.getElementById("p-lista").style.display = "none";
+
+    divAbierto.style.display = "block";
+    mensajeCargando.style.display = "block";
+    listaAlumnosUl.style.display = "block";
+
+
+
+
+    // Recorre el array de alumnos filtrados y crea elementos <li> para cada alumno
+
+    if (listaDeAlumnos.length === 0) {
+        setTimeout(() => {
+            mensajeCargando.style.display = "none";
+            document.getElementById("p-lista").style.display = "block";
+
+        }, 600);
+
+
+        return;
+    } else {
+        setTimeout(() => {
+            alumnosFiltrados.sort((a, b) => b.nota - a.nota);
+            alumnosFiltrados.forEach((alumno, idx) => {
+
+                mensajeCargando.style.display = "none";
+                
+                const li = document.createElement("li");
+                const botonEliminar = document.createElement("button");
+                botonEliminar.innerText = "Eliminar";
+                botonEliminar.addEventListener("click", () => sweetAlertEliminar(idx));
+                li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - Nota final: ${alumno.nota}`;
+                li.appendChild(botonEliminar);
+                listaAlumnosUl.appendChild(li);
+
+            });
+        }, 600);
+    }
+
+
+}
 
 // Función para buscar alumnos por nombre y apellido 
 let timeoutId;
@@ -370,7 +420,7 @@ const busqueda = () => {
                 const nombreCompleto = `${alumno.nombre} ${alumno.apellido}`.toUpperCase();
                 return nombreCompleto.includes(buscarInput);
             });
-            mostrarAlumnosFiltrados(resultados);
+            mostrarAlumnosFiltradosBusqueda(resultados);
         }, 300);
     }
 }
