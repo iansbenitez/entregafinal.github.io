@@ -7,7 +7,7 @@ const removeAccents = (str) => {
 
 // constante y constructor alumnos
 
-const listaDeAlumnos = JSON.parse(localStorage.getItem("listaDeAlumnos")) || [];
+const listaDeAlumnos = JSON.parse(removeAccents(localStorage.getItem("listaDeAlumnos"))) || [];
 
 class Alumno {
     constructor(nombreAlumno, apellidoAlumno, notaAlumno) {
