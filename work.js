@@ -129,7 +129,7 @@ contenedorDatos.innerHTML = `
 <form id="form-test">
 <input type="text" id="nombreInput" placeholder="Ingresar nombre..." />
 <input type="text" id="apellido" placeholder="Ingresar apellido..." />
-<input type="number" id="nota" placeholder="ingresar nota..." />
+<input type="number" id="nota" min="1" max="10" placeholder="ingresar nota..." />
 <input type="button" id="enviarDatos" class="btn-filtro" min="1" max="10" value="Enviar Datos" />
 </form>`;
 
@@ -453,6 +453,10 @@ const mostrarListaEditar = () => {
                 inputEditar.placeholder = "Nueva nota."
                 inputEditar.dataset.idx = idx;
                 inputEditar.type = "number";
+
+                inputEditar.min = 1;
+                inputEditar.max = 10;
+
                 const botonEditar = document.createElement("button");
                 botonEditar.id = "botonEditar";
                 botonEditar.innerText = "Editar nota.";
@@ -681,7 +685,7 @@ const eliminarAlumno = (idx) => {
 
 const sweetAlertEliminar = (idx) => {
     const alumnoEliminar = listaDeAlumnos[idx];
-    
+
     Swal.fire({
         icon: 'warning',
         text: `Estás seguro? Vas a eliminar al alumno ${alumnoEliminar.nombre} ${alumnoEliminar.apellido}`,
@@ -693,7 +697,7 @@ const sweetAlertEliminar = (idx) => {
         color: "#fff"
     }).then((result) => {
         if (result.isConfirmed) {
-            
+
             eliminarAlumno(idx);
             Toastify({
                 text: "Alumno eliminado.",
