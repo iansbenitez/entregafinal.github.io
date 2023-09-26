@@ -461,6 +461,7 @@ const mostrarListaEditar = () => {
                 botonEditar.id = "botonEditar";
                 botonEditar.innerText = "Editar nota.";
                 botonEditar.addEventListener("click", () => {
+                    // Acá no encontraba la manera de conseguir el dato del alumno y me terminé apoyando en ChatGPT. El resto ya lo tenia pensado
                     const idx = inputEditar.dataset.idx; // Obten el índice del atributo data-idx
                     const nuevaNota = parseFloat(document.getElementById(`inputEditar-${idx}`).value); // Obtén el valor del input
                     if (!isNaN(nuevaNota) && nuevaNota >= 1 && nuevaNota <= 10 && alumno.nota != nuevaNota) {
@@ -477,11 +478,11 @@ const mostrarListaEditar = () => {
                             color: "#fff"
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                // Actualiza la nota del alumno en el array
+                                // Actualiza la nota
                                 listaDeAlumnos[idx].nota = nuevaNota;
-                                // Actualiza el valor aprobado
+                                // Actualiza el valor si se editó la nota
                                 listaDeAlumnos[idx].aprobado = nuevaNota >= 7;
-                                // Actualiza el almacenamiento local
+                                // Pusheo al localStorage utilizando stringify
                                 localStorage.setItem("listaDeAlumnos", JSON.stringify(listaDeAlumnos));
                                 Toastify({
                                     text: "Nota actualizada.",
@@ -732,7 +733,6 @@ if (listaDeAlumnos.length === 0) {
             localStorage.setItem('listaDeAlumnos', JSON.stringify(response));
         })
 }
-
 
 
 // Botón para mostrar lista
