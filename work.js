@@ -188,8 +188,8 @@ contenedorLista.innerHTML = `
 <ul id="listaAlumnos"></ul>
 <div class="loader" id="mensajeCargando" style= "display:none;"></div>
 <p id="p-lista"> Aún no hay alumnos, por favor ingresar. </p>
-<p id="emptyAprobados" style="display: none;">No hay alumnos aprobados.</p>
-<p id="emptyDesaprobados" style="display: none;">No hay alumnos desaprobados.</p>
+<p id="vacioAprobados" style="display: none;">No hay alumnos aprobados.</p>
+<p id="vacioDesaprobados" style="display: none;">No hay alumnos desaprobados.</p>
 <p id="sinCoincidencias" style="display:none;">No se encontraron coincidencias</p>
 `
 
@@ -218,8 +218,8 @@ function mostrarListaDeAlumnos() {
     listaAlumnosUl.innerHTML = "";
 
     document.getElementById("p-lista").style.display = "none";
-    document.getElementById("emptyDesaprobados").style.display = "none";
-    document.getElementById("emptyAprobados").style.display = "none";
+    document.getElementById("vacioDesaprobados").style.display = "none";
+    document.getElementById("vacioAprobados").style.display = "none";
 
 
 
@@ -423,8 +423,8 @@ const mostrarListaEditar = () => {
     listaAlumnosUl.innerHTML = "";
 
     document.getElementById("p-lista").style.display = "none";
-    document.getElementById("emptyDesaprobados").style.display = "none";
-    document.getElementById("emptyAprobados").style.display = "none";
+    document.getElementById("vacioDesaprobados").style.display = "none";
+    document.getElementById("vacioAprobados").style.display = "none";
 
 
 
@@ -606,14 +606,14 @@ const aprobados = () => {
 
 
     if (aprobados.length === 0 && listaDeAlumnos.length > 0) {
-        document.getElementById("emptyAprobados").style.display = "none";
+        document.getElementById("vacioAprobados").style.display = "none";
         setTimeout(() => {
             document.getElementById("mensajeCargando").style.display = "none";
-            document.getElementById("emptyAprobados").style.display = "block";
+            document.getElementById("vacioAprobados").style.display = "block";
         }, 600);
-        document.getElementById("emptyDesaprobados").style.display = "none";
+        document.getElementById("vacioDesaprobados").style.display = "none";
     } else {
-        document.getElementById("emptyAprobados").style.display = "none";
+        document.getElementById("vacioAprobados").style.display = "none";
     }
 
     mostrarAlumnosFiltrados(aprobados);
@@ -631,13 +631,13 @@ const desaprobados = () => {
 
         setTimeout(() => {
             document.getElementById("mensajeCargando").style.display = "none";
-            document.getElementById("emptyDesaprobados").style.display = "block";
+            document.getElementById("vacioDesaprobados").style.display = "block";
         }, 600);
 
 
-        document.getElementById("emptyAprobados").style.display = "none";
+        document.getElementById("vacioAprobados").style.display = "none";
     } else {
-        document.getElementById("emptyDesaprobados").style.display = "none";
+        document.getElementById("vacioDesaprobados").style.display = "none";
     }
 
     mostrarAlumnosFiltrados(desaprobados);
@@ -648,8 +648,8 @@ const desaprobados = () => {
 // Función para ocultar mensajes 
 
 const ocultarMensajes = () => {
-    document.getElementById("emptyAprobados").style.display = "none";
-    document.getElementById("emptyDesaprobados").style.display = "none";
+    document.getElementById("vacioAprobados").style.display = "none";
+    document.getElementById("vacioDesaprobados").style.display = "none";
 }
 
 
