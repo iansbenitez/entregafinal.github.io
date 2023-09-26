@@ -1,43 +1,43 @@
 [
   {
-    "nombre": "María",
-    "apellido": "López",
+    "nombre": "Maria",
+    "apellido": "Lopez",
     "nota": 9,
     "aprobado": true
   },
   {
     "nombre": "Juan",
-    "apellido": "García",
+    "apellido": "Garcia",
     "nota": 7,
     "aprobado": true
   },
   {
-    "nombre": "Sofía",
-    "apellido": "Martínez",
+    "nombre": "Sofia",
+    "apellido": "Martinez",
     "nota": 8,
     "aprobado": true
   },
   {
     "nombre": "Pedro",
-    "apellido": "Rodríguez",
+    "apellido": "Rodriguez",
     "nota": 6,
     "aprobado": false
   },
   {
     "nombre": "Ana",
-    "apellido": "Hernández",
+    "apellido": "Hernandez",
     "nota": 5,
     "aprobado": false
   },
   {
     "nombre": "Lucas",
-    "apellido": "Pérez",
+    "apellido": "Perez",
     "nota": 7,
     "aprobado": true
   },
   {
     "nombre": "Valentina",
-    "apellido": "Díaz",
+    "apellido": "Diaz",
     "nota": 4,
     "aprobado": false
   },
@@ -61,13 +61,13 @@
   },
   {
     "nombre": "Isabella",
-    "apellido": "López",
+    "apellido": "Lopez",
     "nota": 9,
     "aprobado": true
   },
   {
     "nombre": "Diego",
-    "apellido": "Gómez",
+    "apellido": "Gomez",
     "nota": 6,
     "aprobado": false
   },
@@ -78,7 +78,7 @@
     "aprobado": true
   },
   {
-    "nombre": "José",
+    "nombre": "Jose",
     "apellido": "Castro",
     "nota": 3,
     "aprobado": false
@@ -90,3 +90,4 @@
     "aprobado": true
   }
 ]
+
