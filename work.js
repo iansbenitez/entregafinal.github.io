@@ -129,7 +129,7 @@ contenedorDatos.innerHTML = `
 <form id="form-test">
 <input type="text" id="nombreInput" placeholder="Ingresar nombre..." />
 <input type="text" id="apellido" placeholder="Ingresar apellido..." />
-<input type="number" id="nota" min="1" max="10" placeholder="ingresar nota..." />
+<input type="number" id="nota" min="1" max="10" placeholder="Nota..." />
 <input type="button" id="enviarDatos" class="btn-filtro" min="1" max="10" value="Enviar Datos" />
 </form>`;
 
@@ -164,11 +164,11 @@ contenedorBotones.innerHTML = `
 </p>  
   <div class="collapse" id="collapseExample">
   <div class="card card-body">
-    <button type="button" class="btn btn-interno btn-collapse btn-mayorMenor">Nota mayor a menor</button>
-    <button type="button" class="btn btn-interno btn-collapse btn-menorMayor">Nota menor a mayor</button>
-    <button type="button" class="btn btn-interno btn-collapse btn-aprobados">Aprobados</button>
-    <button type="button" class="btn btn-interno btn-collapse btn-desaprobados">Desaprobados</button>
-    <button type="button" class="btn btn-interno btn-collapse btn-alfabeto">Alfabeticamente</button>
+    <button type="button" class="btn btn-interno btn-collapse btn-mayorMenor" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Nota mayor a menor</button>
+    <button type="button" class="btn btn-interno btn-collapse btn-menorMayor" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Nota menor a mayor</button>
+    <button type="button" class="btn btn-interno btn-collapse btn-aprobados" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Aprobados</button>
+    <button type="button" class="btn btn-interno btn-collapse btn-desaprobados" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Desaprobados</button>
+    <button type="button" class="btn btn-interno btn-collapse btn-alfabeto" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Alfabeticamente</button>
   </div>
 </div>
 <div><input id="inputSearch" type="search" placeholder="Ingrese el nombre del alumno a buscar..."/></div>`
@@ -227,11 +227,11 @@ function mostrarListaDeAlumnos() {
 
         setTimeout(() => {
             mensajeCargando.style.display = "none";
-        }, 600);
+        }, 1000);
 
         setTimeout(() => {
             document.getElementById("p-lista").style.display = "block";
-        }, 600);
+        }, 1000);
 
         return;
     } else// Recorre el array listaDeAlumnos y crea un li para cada uno
@@ -243,6 +243,7 @@ function mostrarListaDeAlumnos() {
 
 
                 const botonEliminar = document.createElement("button");
+                botonEliminar.id = "botonEliminar"
                 botonEliminar.innerText = "Eliminar";
                 botonEliminar.addEventListener("click", () => sweetAlertEliminar(idx));
                 li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - Nota final: ${alumno.nota} `;
@@ -250,7 +251,7 @@ function mostrarListaDeAlumnos() {
                 li.appendChild(botonEliminar);
                 listaAlumnosUl.appendChild(li);
             })
-        }, 600))
+        }, 1000))
 }
 
 
@@ -277,7 +278,7 @@ function mostrarListaDeAlumnosOrdenada() {
         setTimeout(() => {
             mensajeCargando.style.display = "none";
             document.getElementById("p-lista").style.display = "block";
-        }, 600);
+        }, 1000);
 
 
         return;
@@ -291,13 +292,14 @@ function mostrarListaDeAlumnosOrdenada() {
 
                 const li = document.createElement("li");
                 const botonEliminar = document.createElement("button");
+                botonEliminar.id = "botonEliminar"
                 botonEliminar.innerText = "Eliminar";
                 botonEliminar.addEventListener("click", () => sweetAlertEliminar(idx));
                 li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - Nota final: ${alumno.nota}`;
                 li.appendChild(botonEliminar);
                 listaAlumnosUl.appendChild(li);
             })
-        }, 600)
+        }, 1000)
     }
 
     listaAlumnosUl.innerHTML = "";
@@ -330,7 +332,7 @@ const mostrarAlumnosFiltrados = (alumnosFiltrados) => {
             mensajeCargando.style.display = "none";
             document.getElementById("p-lista").style.display = "block";
 
-        }, 600);
+        }, 1000);
 
 
         return;
@@ -343,6 +345,7 @@ const mostrarAlumnosFiltrados = (alumnosFiltrados) => {
 
                 const li = document.createElement("li");
                 const botonEliminar = document.createElement("button");
+                botonEliminar.id = "botonEliminar"
                 botonEliminar.innerText = "Eliminar";
                 botonEliminar.addEventListener("click", () => sweetAlertEliminar(idx));
                 li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - Nota final: ${alumno.nota}`;
@@ -350,7 +353,7 @@ const mostrarAlumnosFiltrados = (alumnosFiltrados) => {
                 listaAlumnosUl.appendChild(li);
 
             });
-        }, 600);
+        }, 1000);
     }
 
 
@@ -377,12 +380,13 @@ const mostrarAlumnosFiltradosBusqueda = (alumnosFiltrados) => {
 
     // Recorre el array de alumnos filtrados y crea elementos <li> para cada alumno
 
-    if (listaDeAlumnos.length === 0) {
+    if (alumnosFiltrados.length === 0) {
         setTimeout(() => {
             mensajeCargando.style.display = "none";
+            document.getElementById("p-lista").innerText = "No se encontraron coincidencias"
             document.getElementById("p-lista").style.display = "block";
 
-        }, 600);
+        }, 1000);
 
 
         return;
@@ -392,9 +396,11 @@ const mostrarAlumnosFiltradosBusqueda = (alumnosFiltrados) => {
             alumnosFiltrados.forEach((alumno, idx) => {
 
                 mensajeCargando.style.display = "none";
+                document.getElementById("sinCoincidencias").style.display = "none";
 
                 const li = document.createElement("li");
                 const botonEliminar = document.createElement("button");
+                botonEliminar.id = "botonEliminar"
                 botonEliminar.innerText = "Eliminar";
                 botonEliminar.addEventListener("click", () => sweetAlertEliminar(idx));
                 li.innerText = `${idx + 1}) ${alumno.nombre.toUpperCase()} ${alumno.apellido.toUpperCase()} - Nota final: ${alumno.nota}`;
@@ -402,7 +408,7 @@ const mostrarAlumnosFiltradosBusqueda = (alumnosFiltrados) => {
                 listaAlumnosUl.appendChild(li);
 
             });
-        }, 600);
+        }, 1000);
     }
 
 
@@ -432,11 +438,11 @@ const mostrarListaEditar = () => {
 
         setTimeout(() => {
             mensajeCargando.style.display = "none";
-        }, 600);
+        }, 1000);
 
         setTimeout(() => {
             document.getElementById("p-lista").style.display = "block";
-        }, 600);
+        }, 1000);
 
         return;
     } else// Recorre el array listaDeAlumnos y crea un li para cada uno
@@ -532,7 +538,7 @@ const mostrarListaEditar = () => {
                 divDivisor.appendChild(botonEditar);
                 listaAlumnosUl.appendChild(li);
             })
-        }, 600))
+        }, 1000))
 }
 
 
@@ -546,6 +552,7 @@ const busqueda = () => {
 
     const buscarInput = document.getElementById("inputSearch").value.toUpperCase();
     const listaAlumnosUl = document.getElementById("listaAlumnos");
+    
 
     listaAlumnosUl.innerHTML = "";
 
@@ -554,7 +561,6 @@ const busqueda = () => {
     } else {
         timeoutId = setTimeout(() => {
             const resultados = listaDeAlumnos.filter(alumno => {
-                document.getElementById("sinCoincidencias").style.display = "none";
                 const nombreCompleto = `${alumno.nombre} ${alumno.apellido}`.toUpperCase();
                 return nombreCompleto.includes(buscarInput);
             });
@@ -610,7 +616,7 @@ const aprobados = () => {
         setTimeout(() => {
             document.getElementById("mensajeCargando").style.display = "none";
             document.getElementById("vacioAprobados").style.display = "block";
-        }, 600);
+        }, 1000);
         document.getElementById("vacioDesaprobados").style.display = "none";
     } else {
         document.getElementById("vacioAprobados").style.display = "none";
@@ -632,7 +638,7 @@ const desaprobados = () => {
         setTimeout(() => {
             document.getElementById("mensajeCargando").style.display = "none";
             document.getElementById("vacioDesaprobados").style.display = "block";
-        }, 600);
+        }, 1000);
 
 
         document.getElementById("vacioAprobados").style.display = "none";
